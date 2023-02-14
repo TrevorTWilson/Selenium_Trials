@@ -85,17 +85,21 @@ def set_report_date(report_date):
     month = report_date.strftime('%B')
     year = str(report_date.year)
     day = str(report_date.day)
+
     # open datepicker
     next_selection(date_button)
     time.sleep(1)
+
     # select month
     new_selection = Select(browser.find_element(By.XPATH, month_attribute))
     new_selection.select_by_visible_text(month)
     #time.sleep(1)
+
     # select year
     new_selection = Select(browser.find_element(By.XPATH, year_attribute))
     new_selection.select_by_visible_text(year)
     #time.sleep(1)
+
     #select day
     next_selection(f'//*[text()="{day}"]')
 
