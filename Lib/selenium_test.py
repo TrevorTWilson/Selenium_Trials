@@ -6,6 +6,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.action_chains import ActionBuilder
 from Xpath_locations import *
 import time
 
@@ -23,11 +25,14 @@ url2 = "https://app.goformz.com/forms?page=1&pageSize=25&sortDir=desc&sortBy=las
 # Load Initial view of Website and give time to load
 browser.get(url)
 
+# set wait time
+wait = 25
+
 # Function to log in to GoFormz
 def login():
     for _ in range(2):
         try:
-            element = WebDriverWait(browser, 10).until(
+            element = WebDriverWait(browser, wait).until(
                 EC.presence_of_element_located((By.ID, "username"))
             )
         finally:
@@ -44,7 +49,7 @@ def login():
 def next_selection(website_element, answer='', txt_entry=''):
     # Wait for website
     try:
-        element = WebDriverWait(browser, 10).until(
+        element = WebDriverWait(browser, wait).until(
             EC.presence_of_element_located((By.XPATH, website_element))
         )
     finally:
@@ -61,7 +66,7 @@ def next_selection(website_element, answer='', txt_entry=''):
             new_selection.send_keys(txt_entry)
         if answer != '':
             try:
-                element = WebDriverWait(browser, 10).until(
+                element = WebDriverWait(browser, wait).until(
                     EC.presence_of_element_located((By.XPATH, answer))
                 )
             finally:
@@ -106,6 +111,28 @@ def set_report_date(report_date):
     next_selection(date_done_button)
 
 
+def add_signature():
+    # initialize action chain
+    next_selection(signature_field)
+    action = ActionChains(browser)
+    action.move_to_element(browser.find_element(By.XPATH, signature_field_sign))
+    action.move_by_offset(-200, 0)
+    action.click_and_hold()
+    action.move_by_offset(100, -60).move_by_offset(-50, 120).move_by_offset(0, -60)
+    action.release()
+    action.move_by_offset(0, 0).move_by_offset(0, 0)
+    action.click_and_hold()
+    action.move_by_offset(200, 0).move_by_offset(200, 0)
+    action.release()
+    action.perform()
+    return
+
+
+
+
+
+
+
 
 # function to complete report
 def write_report(list_of_items):
@@ -121,6 +148,10 @@ new_report(generate_report)
 
 # Complete writing Report
 write_report(full_report)
+
+# enter signature
+#time.sleep(8)
+add_signature()
 
 # pause for inspection
 input('Enter when done')
