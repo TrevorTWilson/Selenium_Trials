@@ -85,8 +85,10 @@ def new_report(steps, report_date = date.today()):
 
 # Function to insert date
 def set_report_date(report_date):
-    # set report date
-    report_date -= timedelta(days=1)
+    #check Report date remove one day if todays date
+    if report_date == date.today():
+        report_date -= timedelta(days=1)
+   # convert to useable data
     month = report_date.strftime('%B')
     year = str(report_date.year)
     day = str(report_date.day)
